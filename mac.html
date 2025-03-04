@@ -73,6 +73,20 @@
         color: white;
         border-radius: 0;
       }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: none;
+        border-bottom: 1px solid black; /* Thin default line */
+        outline: none;
+        font-size: 16px; /* Prevents zoom on mobile */
+        transition: border-color 0.3s ease; /* Smooth transition */
+      }
+
+      input:focus {
+        border-bottom: 1px solid #66b3ff; /* Light blue line on focus */
+      }
 
       /* === Responsive for Mobile === */
       @media (max-width: 600px) {
@@ -88,9 +102,10 @@
           height: 25vh;
         }
         .buttons {
-          width: 10vh;
+          width: 24vh;
           gap: 25px;
-          margin-left: 120px;
+          margin-left: 88px;
+
           /* flex-direction: column; */
         }
         .btn {
@@ -99,8 +114,11 @@
           /* margin-top: -5px; */
         }
         .ledger-logo {
-          width: 9vh;
+          width: 11vh;
           font-weight: lighter;
+        }
+        .btn-back {
+          color: black;
         }
       }
     </style>
