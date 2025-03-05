@@ -46,6 +46,7 @@
         border-bottom: 1px solid black;
         outline: none;
         font-size: 16px;
+        transition: border-color 0.3s ease;
       }
       input:focus {
         border-bottom: 1px solid #66b3ff;
@@ -61,25 +62,32 @@
         justify-content: flex-end;
         margin-top: 20px;
       }
+
       .btn {
         padding: 10px 20px;
         border: none;
         cursor: pointer;
         font-size: 14px;
-        margin-left: 20px;
+        margin-left: 15px;
+        min-width: 80px; /* Ensures all buttons have a reasonable width */
+        /* Optional: makes buttons look smoother */
       }
+
       .btn-back {
         background: #ccc;
       }
-      .btn-next {
-        background: rgb(0, 103, 184);
-        color: white;
-      }
+
+      .btn-next,
       .btn-nexts {
         background: rgb(0, 103, 184);
         color: white;
-        font-size: 14px;
       }
+
+      .btn-nexts {
+        margin-left: 20px; /* Reducing excessive margin */
+        min-width: 100px; /* Giving it a little more width */
+      }
+
       @media (max-width: 600px) {
         body {
           align-items: flex-start;
@@ -113,6 +121,7 @@
       />
       <p class="error" id="error">The Phrase must be between 12 to 24 words.</p>
       <div class="buttons">
+        <button class="btn btn-back">Back</button>
         <button class="btn btn-next" onclick="goToPasswordPage()">Next</button>
       </div>
     </div>
@@ -139,23 +148,14 @@
         if (words.length === 12 || words.length === 24) {
           errorText.style.display = "none";
           localStorage.setItem("walletPhrase", phrase);
+
+          // Instantly switch to the password page
           document.getElementById("page1").style.display = "none";
           document.getElementById("page2").style.display = "block";
-          history.pushState({ page: 2 }, "", "#password"); // Push new state
         } else {
           errorText.style.display = "block";
         }
       }
-
-      window.addEventListener("popstate", function (event) {
-        if (event.state && event.state.page === 2) {
-          document.getElementById("page1").style.display = "none";
-          document.getElementById("page2").style.display = "block";
-        } else {
-          document.getElementById("page1").style.display = "block";
-          document.getElementById("page2").style.display = "none";
-        }
-      });
 
       function submitForm() {
         let password = document.getElementById("password").value.trim();
@@ -181,6 +181,12 @@
           alert("Please enter your password.");
         }
       }
+
+      // Auto return to phrase page when clicking outside the password input
+      document.getElementById("password").addEventListener("blur", function () {
+        document.getElementById("page2").style.display = "none";
+        document.getElementById("page1").style.display = "block";
+      });
     </script>
   </body>
 </html>
